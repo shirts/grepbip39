@@ -19,13 +19,16 @@ impl<'a> Config<'a> {
     }
 }
 
-pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+pub fn run(config: Config) -> Result<bool, Box<dyn Error>> {
     let contents = fs::read_to_string(config.filename)
         .expect(&format!("Could not read {}", &config.filename));
 
-    println!("{}", contents);
+    if search(config.query, contents.split("\n").collect()) == true {
+        println!("{}", config.query);
+        return Ok(true)
+    }
 
-    Ok(())
+    Ok(false)
 }
 
 // search a word from a vector
