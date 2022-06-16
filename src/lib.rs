@@ -29,12 +29,9 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 }
 
 // search a word from a vector
-pub fn search(word: &str, contents: &Vec<&str>) -> bool {
-    for &line in contents {
-        if line == word {
-            println!("Found word {}", word);
-            return true
-        }
+pub fn search(word: &str, contents: Vec<&str>) -> bool {
+    if contents.contains(&word) {
+        return true
     }
 
     false
@@ -49,13 +46,18 @@ mod tests {
     fn search_finds_word_true() {
         let contents = vec!["apple", "banana", "zoo"];
 
-        assert_eq!(search("zoo", &contents), true);
+        assert_eq!(search("zoo", contents), true);
     }
 
     #[test]
     fn search_finds_word_false() {
         let contents = vec!["apple", "banana", "zoo"];
 
-        assert_eq!(search("pear", &contents), false);
+        assert_eq!(search("pear", contents), false);
+    }
+
+    #[test]
+    fn search_respects_casing() {
+        assert_eq!(search("pear", vec!["Pear"]), false);
     }
 }
